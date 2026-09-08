@@ -6,7 +6,7 @@ AETHER combines telemetry correlation, retrieval, and LLM reasoning to turn frag
 
 ## Why this project
 
-Production incidents rarely live in one data source. Logs explain symptoms, traces explain execution paths, deployments explain change, and runbooks explain known recovery paths. AETHER is designed around the idea that an AI incident assistant should **retrieve and connect evidence before generating an answer**.
+Production incidents rarely live in one data source. Logs explain symptoms, traces explain execution paths, deployments explain change, and runbooks explain known recovery paths. AETHER is designed around the principle that an AI incident assistant should **retrieve and connect evidence before generating an explanation**.
 
 ## Architecture
 
@@ -42,7 +42,7 @@ Production incidents rarely live in one data source. Logs explain symptoms, trac
 - **Telemetry ingestion:** logs, stack traces, deployment metadata, incidents, and OpenTelemetry traces
 - **Semantic retrieval:** operational knowledge indexed with PostgreSQL + pgvector
 - **Incident correlation:** connects symptoms with services, changes, ownership, and historical incidents
-- **Evidence-backed RCA:** separates retrieved evidence from generated synthesis
+- **Evidence-backed RCA:** distinguishes retrieved evidence from generated synthesis
 - **Remediation recommendations:** produces actionable next steps rather than a generic incident summary
 - **Safety controls:** confidence thresholds, validation, human review, and audit logging
 - **Observability:** metrics and traces for the AI pipeline itself
@@ -60,7 +60,7 @@ The project reports results from an **840-case incident benchmark**:
 | Triage-time reduction | **40%** |
 | Platform availability | **99.9%** |
 
-These numbers are presented as project evaluation results; the repository should be used to inspect the implementation and evaluation methodology rather than treating the metrics as independently verified production benchmarks.
+These are **project-reported evaluation results**, not independently audited production benchmarks. The implementation and evaluation workflow are the source of truth.
 
 ## Technology
 
@@ -78,22 +78,32 @@ These numbers are presented as project evaluation results; the repository should
 3. **Human control for high-impact actions** — recommendations are not autonomous production changes.
 4. **Observability for AI systems** — latency, retrieval quality, errors, and outputs all need visibility.
 
+## How to evaluate the project
+
+When reviewing this repository, focus on four questions:
+
+1. Can the ingestion and retrieval path be reproduced locally?
+2. Is the evidence chain inspectable rather than hidden inside a prompt?
+3. Can benchmark cases and metrics be rerun independently?
+4. Are failure modes, validation, and human-review paths explicit?
+
 ## Repository guide
 
-```text
-.
-├── backend/       # API, orchestration, retrieval, RCA
-├── frontend/      # operator interface
-├── evaluation/    # benchmark and evaluation workflows
-├── infrastructure/# deployment configuration
-└── tests/         # automated validation
-```
+Use the repository tree as the source of truth for the current implementation.
 
-> Directory names above describe the intended project organization; use the repository tree as the source of truth for the current implementation.
+```text
+backend/         API, orchestration, retrieval, RCA
+frontend/        operator interface
+evaluation/      benchmark and evaluation workflows
+infrastructure/ deployment configuration
+tests/           automated validation
+```
 
 ## Status
 
-🚧 **Active engineering project** — evolving toward stronger reproducible evaluation, richer telemetry integrations, and production-grade deployment workflows.
+🚧 **Active engineering project**
+
+Current work centers on stronger reproducible evaluation, richer telemetry integrations, and production-grade deployment workflows.
 
 ## Author
 
