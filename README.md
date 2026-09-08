@@ -1,138 +1,101 @@
-<div align="center">
+# AETHER — AI Incident Intelligence Platform
 
-# 🔮 AETHER — AI Incident Intelligence Platform
+> Evidence-driven incident investigation for engineering teams.
 
-![Python](https://img.shields.io/badge/Python-3.11-blue?style=flat-square&logo=python&logoColor=white)
-![LangChain](https://img.shields.io/badge/LangChain-RAG-green?style=flat-square)
-![Claude API](https://img.shields.io/badge/Claude_API-Anthropic-orange?style=flat-square)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi)
-![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-pgvector-336791?style=flat-square&logo=postgresql)
-![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=amazonaws)
-![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-425CC7?style=flat-square)
+AETHER combines telemetry correlation, retrieval, and LLM reasoning to turn fragmented operational signals into an auditable incident investigation: **symptoms → evidence → root-cause hypothesis → remediation**.
 
-**Enterprise AI platform for automated incident investigation — root cause analysis, telemetry correlation, and evidence-backed remediation recommendations.**
+## Why this project
 
-</div>
+Production incidents rarely live in one data source. Logs explain symptoms, traces explain execution paths, deployments explain change, and runbooks explain known recovery paths. AETHER is designed around the idea that an AI incident assistant should **retrieve and connect evidence before generating an answer**.
 
----
-
-## 📊 Evaluation Results
-
-Benchmarked against **840 real production outage cases** · **10.4M logs** · **2.1M spans audited**
-
-| Metric | Result |
-|--------|--------|
-| 🎯 Top-1 Diagnostic Accuracy | **94.2%** — matches primary culprit exactly |
-| 🔬 Precision | **95.4%** |
-| 📡 Recall | **91.8%** — excludes background system noise |
-| ⚠️ False Positive Rate | **2.18%** — from logs to patch draft |
-| ⚡ Triage Time Reduction | **40%** |
-| 🟢 Platform Availability | **99.9%** |
-| 🏗 Time to Production | **3 weeks** |
-
----
-
-## 🎯 The Problem
-
-Engineering teams spend significant time investigating production incidents across fragmented systems:
-
-- 📜 Application logs
-- 💥 Stack traces
-- 🚀 Deployment history
-- 📈 Monitoring & metrics
-- 📚 Runbooks & documentation
-
-Critical information is scattered across multiple systems — increasing MTTR and slowing root cause identification.
-
----
-
-## 💡 The Solution
-
-AETHER centralizes operational telemetry and combines:
-
-- 🤖 **Claude API** — LLM reasoning for root cause synthesis
-- 🔎 **RAG (Retrieval-Augmented Generation)** — pgvector semantic search over operational knowledge
-- 🧠 **LangChain Agents** — multi-step correlation across logs, traces, deploys, commits, PRs
-- 📊 **Evidence Correlation** — links symptoms to root cause with supporting evidence chains
-
-...to automatically generate:
-
-- ✅ Root cause analysis
-- ✅ Supporting evidence
-- ✅ Contributing factors
-- ✅ Remediation recommendations
-
----
-
-## 🚀 Core Features
-
-### 📥 Telemetry Ingestion
-Application logs · container logs · stack traces · deployment metadata · incident summaries · OpenTelemetry traces
-
-### 🧠 AI Root Cause Analysis
-Automated RCA generation · confidence scoring · evidence-based reasoning · contributing factor detection
-
-### 🔍 Knowledge Retrieval
-Historical incidents · runbooks · SOPs · engineering documentation · deployment history — all via pgvector semantic search
-
-### 🔗 Incident Correlation
-Service ownership mapping · deployment correlation · change impact analysis · similar incident discovery
-
-### 🛡️ Responsible AI
-Human review workflows · output validation · audit logging · confidence thresholds before any automated action
-
----
-
-## 🏗️ Architecture
+## Architecture
 
 ```text
-┌─────────────────────┐
-│  React + TypeScript │   ← Operator dashboard
-└──────────┬──────────┘
+┌──────────────────────┐
+│ React + TypeScript   │  Operator UI
+└──────────┬───────────┘
            │
-┌──────────▼──────────┐
-│  FastAPI + LangChain │   ← Orchestration layer
-└──────────┬──────────┘
+┌──────────▼───────────┐
+│ FastAPI              │  API / orchestration
+└──────────┬───────────┘
            │
-┌──────────▼──────────┐
-│ Claude API + RAG     │   ← Reasoning + retrieval
-│ Engine                │
-└──────────┬──────────┘
+┌──────────▼───────────┐
+│ Correlation + RAG    │  evidence retrieval
+└──────────┬───────────┘
            │
-┌──────────▼──────────┐
-│ PostgreSQL + pgvector │   ← Vector store + relational data
-└──────────┬──────────┘
-           │
-┌──────────▼──────────┐
-│ AWS + Docker + CI/CD  │   ← Production deployment
-│ + OpenTelemetry +     │
-│ Prometheus            │
-└───────────────────────┘
+     ┌─────┴─────┐
+     ▼           ▼
+ PostgreSQL   Claude API
+ + pgvector   reasoning
+     │           │
+     └─────┬─────┘
+           ▼
+   RCA + evidence + remediation
 ```
 
-**Pipeline:** Logs → Traces → Deploys → Commits → PRs → Correlation Engine → pgvector → LangChain → LLM Reasoning → RCA + Remediation
+### Evidence flow
 
----
+`Logs → Traces → Deployments → Commits/PRs → Retrieval → Correlation → LLM synthesis → RCA`
 
-## 📈 Why This Matters
+## Core capabilities
 
-> **Retrieval quality > model quality.**
-> The accuracy gains came from evidence correlation and retrieval design — not from swapping models.
+- **Telemetry ingestion:** logs, stack traces, deployment metadata, incidents, and OpenTelemetry traces
+- **Semantic retrieval:** operational knowledge indexed with PostgreSQL + pgvector
+- **Incident correlation:** connects symptoms with services, changes, ownership, and historical incidents
+- **Evidence-backed RCA:** separates retrieved evidence from generated synthesis
+- **Remediation recommendations:** produces actionable next steps rather than a generic incident summary
+- **Safety controls:** confidence thresholds, validation, human review, and audit logging
+- **Observability:** metrics and traces for the AI pipeline itself
 
-> **Evaluation > intuition.**
-> Every claim above is backed by a 840-case benchmark, not a demo.
+## Evaluation
 
----
+The project reports results from an **840-case incident benchmark**:
 
-## 🛠️ Tech Stack
+| Metric | Reported result |
+|---|---:|
+| Top-1 diagnostic accuracy | **94.2%** |
+| Precision | **95.4%** |
+| Recall | **91.8%** |
+| False-positive rate | **2.18%** |
+| Triage-time reduction | **40%** |
+| Platform availability | **99.9%** |
 
-`Python` `FastAPI` `LangChain` `Claude API` `PostgreSQL` `pgvector` `React` `TypeScript` `OpenTelemetry` `Prometheus` `Docker` `AWS`
+These numbers are presented as project evaluation results; the repository should be used to inspect the implementation and evaluation methodology rather than treating the metrics as independently verified production benchmarks.
 
----
+## Technology
 
-<div align="center">
+**AI:** Claude API · LangChain · RAG  
+**Backend:** Python · FastAPI  
+**Data:** PostgreSQL · pgvector  
+**Frontend:** React · TypeScript  
+**Observability:** OpenTelemetry · Prometheus  
+**Deployment:** Docker · AWS
 
-**Built by [Lokesh Alla](https://github.com/lokesh8286235)** · [LinkedIn](https://linkedin.com/in/naga-lokesh-sai-alla-538242251) · [Portfolio](https://portfolio-r7n2.vercel.app)
+## Engineering principles
 
-</div>
+1. **Evidence before generation** — retrieve the signals needed to support an explanation.
+2. **Evaluation before optimization** — define measurable failure modes and track them.
+3. **Human control for high-impact actions** — recommendations are not autonomous production changes.
+4. **Observability for AI systems** — latency, retrieval quality, errors, and outputs all need visibility.
+
+## Repository guide
+
+```text
+.
+├── backend/       # API, orchestration, retrieval, RCA
+├── frontend/      # operator interface
+├── evaluation/    # benchmark and evaluation workflows
+├── infrastructure/# deployment configuration
+└── tests/         # automated validation
+```
+
+> Directory names above describe the intended project organization; use the repository tree as the source of truth for the current implementation.
+
+## Status
+
+🚧 **Active engineering project** — evolving toward stronger reproducible evaluation, richer telemetry integrations, and production-grade deployment workflows.
+
+## Author
+
+**Naga Lokesh Sai Alla**  
+[GitHub](https://github.com/lokesh8286235) · [LinkedIn](https://linkedin.com/in/naga-lokesh-sai-alla-538242251) · [Portfolio](https://portfolio-r7n2.vercel.app)
